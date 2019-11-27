@@ -1,6 +1,7 @@
 #include <ESP8266WiFi.h>
 #include <Wire.h>
 #include <WiFiClientSecure.h>
+#include <StackThunk.h>
 
 #include "FS.h"
 #include "HX711.h"
@@ -31,11 +32,11 @@ HX711 scale(LOAD_DOUT_PIN, LOAD_CLK_PIN);
 const char* host = "script.google.com";
 const int httpsPort = 443; 
 String SCRIPT_ID = "AKfycbyt1zJXaOvHo2_cz7Mfp6ivhan6XcGtnQO_UQzGzq6ECh3G4Zgj";
-const int NUM_NETWORKS = 3;
-const String SSIDS[NUM_NETWORKS] = {"Fellas WiFi", "Closed Network", "BHIPX"};
-const String PASSWORDS[NUM_NETWORKS] = {"Silverton4ever", "portugal1", "123456789"};
-const char* ssid     = "BHIPX"; //"Fellas WiFi";
-const char* password = "123456789"; //"Silverton4ever";
+const int NUM_NETWORKS = 4;
+const String SSIDS[NUM_NETWORKS] = {"Fellas WiFi", "Closed Network", "BHIPX", "BTHub6-3G9R"};
+const String PASSWORDS[NUM_NETWORKS] = {"Silverton4ever", "portugal1", "123456789", "6Dtw3dLDwdRW"};
+const char* ssid     = "BTHub6-3G9R"; //"Fellas WiFi";
+const char* password = "6Dtw3dLDwdRW"; //"Silverton4ever";
 
 // Initial time
 long oldTime;
@@ -46,9 +47,8 @@ long startTime;
 long zeroFactor; // baseline
 float pressure;
 float measure;
-float kgs;
-float scaleFactor = 0.035274;
-float calibrationFactor = -8000;
+float force;
+float calibrationFactor = 70;
 
 void connectToWifi() {
   WiFi.scanNetworks(false, false);
@@ -180,6 +180,7 @@ String getCurrentTimestamp() {
 void setup() {
   Serial.begin(115200);
   connectToWifi();
+  Serial.printf("BSSL stack: %d\n", stack_thunk_get_max_usage());
   Wire.begin();
   SPIFFS.begin();
   
@@ -205,9 +206,11 @@ void setup() {
 
   // Get a baseline reading
   Serial.println("Remove weight from the crutch for baseline reading");
+  Serial.printf("BSSL stack: %d\n", stack_thunk_get_max_usage());
   zeroFactor = scale.read_average();
+  Serial.printf("BSSL stack: %d\n", stack_thunk_get_max_usage());
   Serial.println("Ok.");
-  
+  Serial.printf("BSSL stack: %d\n", stack_thunk_get_max_usage());
   pinMode(13, OUTPUT);
 
   // Store initial time
@@ -226,17 +229,14 @@ bool uploadDatetimeMillis() {
 bool crutchInUse() {
   // detect when crutch is in use
     scale.set_scale(calibrationFactor);
-    pressure = scale.get_units(), 3;
-    if (pressure < 0)
-    {
-      pressure = 0.00;
-    }
-    pressure = pressure * scaleFactor;
-  if(pressure >= 5.0){
+    pressure = scale.get_units(), 10;
+  if(abs(pressure) >= 5){
     return true;
   }
   return true; //false;
 }
+
+
 
 bool collectGaitSample() {
   File appendLog = SPIFFS.open("/log.csv", "a");
@@ -251,15 +251,6 @@ bool collectGaitSample() {
     // Read accelerometer and gyroscope
     uint8_t Buf[14];
     I2Cread(MPU9250_ADDRESS,0x3B,14,Buf);
-
-    // Read load cell
-    scale.set_scale(calibrationFactor);
-    measure = scale.get_units(), 3;
-    if (measure < 0)
-    {
-      measure = 0.00;
-    }
-    kgs = measure * scaleFactor;
     
     // Create 16 bits values from 8 bits data
     // Accelerometer
@@ -271,9 +262,6 @@ bool collectGaitSample() {
     int16_t gx=-(Buf[8]<<8 | Buf[9]);
     int16_t gy=-(Buf[10]<<8 | Buf[11]);
     int16_t gz=Buf[12]<<8 | Buf[13];
-
-    // Load cell
-    int16_t force=-(Buf[0]<<8 | Buf[1]);
 
     // Append gyroscope and accelerometer data to the log
     appendLog.print(millis());
@@ -292,9 +280,11 @@ bool collectGaitSample() {
     appendLog.print(',');
     appendLog.print(gz);
     appendLog.print(',');
-
+    
     // Append load cell data to the log
-    appendLog.print(kgs);
+    force = scale.get_units(), 10;
+    Serial.println(force);
+    appendLog.print(force);
     appendLog.print('|');
   }
   appendLog.print("End_of_sample|");
@@ -343,6 +333,7 @@ bool uploaded_new_data = false;
 
 void loop() {
   if (crutchInUse() && samples_today < DAILY_SAMPLES) { // If weight is being applied to the crutch and we haven't collected more than DAILY_SAMPLES
+    scale.set_scale(calibrationFactor);
     collectGaitSample();
     samples_today++;
     Serial.print("Sample collected, samples today = ");
