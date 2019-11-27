@@ -11,7 +11,7 @@ long zeroFactor; // baseline
 float pressure;
 float units;
 float ounces;
-float calibrationFactor = -8000;
+float calibrationFactor = 70;
 
 void setup() {
   Serial.begin(9600);
@@ -27,7 +27,6 @@ void setup() {
   zeroFactor = scale.read_average(); //Get a baseline reading
   Serial.print("Zero factor: "); //This can be used to remove the need to tare the scale. Useful in permanent scale projects.
   Serial.println(zeroFactor);
-  Serial.println("Reading: ");
 }
 
 void loop() {
@@ -35,12 +34,12 @@ void loop() {
   scale.set_scale(calibrationFactor); //Adjust to this calibration factor
 
   units = scale.get_units(), 10;
-  if (units < 0)
-  {
-    units = 0.00;
-  }
+
   ounces = units * 0.035274;
-  Serial.println(units);
+  Serial.print("Reading: ");
+  Serial.print(abs(units));
+  Serial.print("     Calibration Factor: ");
+  Serial.println(calibrationFactor);
 
   if(Serial.available())
   {
