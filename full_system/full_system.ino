@@ -7,7 +7,7 @@
 #include "HX711.h"
 
 #define SENSOR_SAMPLE_INTERVAL 10000 // Interval between individual IMU/Weight samples in microseconds
-#define SENSOR_SAMPLE_SIZE 20 // Number of sensor samples in each period
+#define SENSOR_SAMPLE_SIZE 1 // Number of sensor samples in each period
 #define DAILY_SAMPLES 5 // Number of gait samples per day
 
 #define MPU9250_ADDRESS 0x68
