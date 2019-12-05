@@ -26,6 +26,11 @@
 #define LOAD_DOUT_PIN 12
 #define LOAD_CLK_PIN 14
 
+#define LED_RED_PIN 0
+#define LED_BLUE_PIN 2
+#define LED_GREEN_PIN 16
+#define MOTOR_PIN 15
+
 // initialise hx711
 HX711 scale(LOAD_DOUT_PIN, LOAD_CLK_PIN);
 
@@ -35,8 +40,8 @@ String SCRIPT_ID = "AKfycbyt1zJXaOvHo2_cz7Mfp6ivhan6XcGtnQO_UQzGzq6ECh3G4Zgj";
 const int NUM_NETWORKS = 4;
 const String SSIDS[NUM_NETWORKS] = {"Fellas WiFi", "Closed Network", "BHIPX", "BTHub6-3G9R"};
 const String PASSWORDS[NUM_NETWORKS] = {"Silverton4ever", "portugal1", "123456789", "6Dtw3dLDwdRW"};
-const char* ssid     = "BTHub6-3G9R"; //"Fellas WiFi";
-const char* password = "6Dtw3dLDwdRW"; //"Silverton4ever";
+const char* ssid     = "BHIPX"; //"BTHub6-3G9R"; //"Fellas WiFi";
+const char* password = "123456789"; //"6Dtw3dLDwdRW"; //"Silverton4ever";
 
 // Initial time
 long oldTime;
@@ -49,6 +54,9 @@ float pressure;
 float measure;
 float force;
 float calibrationFactor = 70;
+float threshold; // threshold for amount of weight placed through crutch
+float upper_bound;
+float lower_bound;
 
 void connectToWifi() {
   WiFi.scanNetworks(false, false);
@@ -204,6 +212,20 @@ void setup() {
   scale.set_scale();
   scale.tare(); // Reset the scale to 0
 
+  // initialize led pins
+  pinMode(LED_RED_PIN, OUTPUT);
+  pinMode(LED_GREEN_PIN, OUTPUT);
+  pinMode(LED_BLUE_PIN, OUTPUT);
+  // start off
+  digitalWrite(LED_RED_PIN, HIGH);
+  digitalWrite(LED_GREEN_PIN, HIGH);
+  digitalWrite(LED_BLUE_PIN, HIGH);
+
+  // initialize motor pin
+  pinMode(MOTOR_PIN, OUTPUT);
+  // start off
+  digitalWrite(MOTOR_PIN, LOW);
+
   // Get a baseline reading
   Serial.println("Remove weight from the crutch for baseline reading");
   Serial.printf("BSSL stack: %d\n", stack_thunk_get_max_usage());
@@ -236,11 +258,43 @@ bool crutchInUse() {
   return true; //false;
 }
 
+float collectWeightMeasurement(){
+    // take reading from sensor in grams
+    force = scale.get_units(), 10;
 
+    // convert to kg
+    float kg_force = abs(force)/1000.00;
+
+    // debug
+    Serial.println(kg_force);
+    
+    // threshold for amount of weight placed through crutch
+    threshold = 1.5; 
+    
+    // allow for 5% variability in the threshold
+    upper_bound = 1.05*threshold;
+    lower_bound = 0.95*threshold;
+
+    // if too much force is being placed through the crutch, light led and vibrate motor
+    if(abs(kg_force) > upper_bound){
+      // turn on
+      digitalWrite(LED_RED_PIN, LOW);
+      digitalWrite(MOTOR_PIN, HIGH);
+    }
+    else{
+      // turn off
+      digitalWrite(LED_RED_PIN,HIGH);
+      digitalWrite(MOTOR_PIN, LOW);
+    }
+
+    return kg_force;
+}
 
 bool collectGaitSample() {
   File appendLog = SPIFFS.open("/log.csv", "a");
   appendLog.print("Start_of_sample|");
+
+  float kg_force = collectWeightMeasurement()
 
   for(int n = 0; n <= SENSOR_SAMPLE_SIZE; n++) {
     newTime = micros();
@@ -282,9 +336,7 @@ bool collectGaitSample() {
     appendLog.print(',');
     
     // Append load cell data to the log
-    force = scale.get_units(), 10;
-    Serial.println(force);
-    appendLog.print(force);
+    appendLog.print(kg_force);
     appendLog.print('|');
   }
   appendLog.print("End_of_sample|");
