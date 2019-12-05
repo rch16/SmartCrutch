@@ -258,7 +258,7 @@ bool crutchInUse() {
   return true; //false;
 }
 
-float collectWeightMeasurement(){
+void collectWeightMeasurement(){
     // take reading from sensor in grams
     force = scale.get_units(), 10;
 
@@ -286,15 +286,17 @@ float collectWeightMeasurement(){
       digitalWrite(LED_RED_PIN,HIGH);
       digitalWrite(MOTOR_PIN, LOW);
     }
-
-    return kg_force;
 }
 
 bool collectGaitSample() {
   File appendLog = SPIFFS.open("/log.csv", "a");
   appendLog.print("Start_of_sample|");
 
-  float kg_force = collectWeightMeasurement()
+  // take reading from sensor in grams
+  float force = scale.get_units(), 10;
+
+  // convert to kg
+  float kg_force = abs(force)/1000.00;
 
   for(int n = 0; n <= SENSOR_SAMPLE_SIZE; n++) {
     newTime = micros();
@@ -391,6 +393,7 @@ void loop() {
     Serial.print("Sample collected, samples today = ");
     Serial.println(samples_today);
     uploaded_new_data = false;
+    collectWeightMeasurement();
   }
   
   if (!uploaded_new_data) { // If new data exists but hasn't been uploaded yet
