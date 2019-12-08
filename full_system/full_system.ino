@@ -6,13 +6,17 @@
 #include "FS.h"
 #include "HX711.h"
 
+// Parameter Config
 #define SENSOR_SAMPLE_INTERVAL 10000 // Interval between individual IMU/Weight samples in microseconds
 #define SENSOR_SAMPLE_SIZE 1 // Number of sensor samples in each period
 #define DAILY_SAMPLES 5 // Number of gait samples per day
+#define WEIGHT_THRESHOLD = 1.5 // threshold for excess weight placed through crutch
 
+// i2c addresses
 #define MPU9250_ADDRESS 0x68
 #define MAG_ADDRESS 0x0C
- 
+
+// Range configuration bytes
 #define GYRO_FULL_SCALE_250_DPS 0x00 
 #define GYRO_FULL_SCALE_500_DPS 0x08
 #define GYRO_FULL_SCALE_1000_DPS 0x10
@@ -23,6 +27,7 @@
 #define ACC_FULL_SCALE_8_G 0x10
 #define ACC_FULL_SCALE_16_G 0x18
 
+// Pin Definitions
 #define LOAD_DOUT_PIN 12
 #define LOAD_CLK_PIN 14
 
@@ -34,6 +39,7 @@
 // initialise hx711
 HX711 scale(LOAD_DOUT_PIN, LOAD_CLK_PIN);
 
+// Connection settings
 const char* host = "script.google.com";
 const int httpsPort = 443; 
 String SCRIPT_ID = "AKfycbyt1zJXaOvHo2_cz7Mfp6ivhan6XcGtnQO_UQzGzq6ECh3G4Zgj";
@@ -58,6 +64,7 @@ float threshold; // threshold for amount of weight placed through crutch
 float upper_bound;
 float lower_bound;
 
+// Search for WiFi networks and join the first recognised
 void connectToWifi() {
   WiFi.scanNetworks(false, false);
   Serial.println("Scanning for networks");
@@ -88,6 +95,7 @@ void connectToWifi() {
   }
 }
 
+// Attempt to connect with https to a host on a given port
 bool connectToSecureHost(BearSSL::WiFiClientSecure *client, const char* host, const int port) {
   int response = client->connect(host, port);
   if (!response) {
@@ -102,6 +110,7 @@ bool connectToSecureHost(BearSSL::WiFiClientSecure *client, const char* host, co
   return true;
 }
 
+// Same as above but http
 bool connectToInsecureHost(WiFiClient *client, const char* host, const int port) {
   int response = client->connect(host, port);
   if (!response) {
@@ -116,6 +125,7 @@ bool connectToInsecureHost(WiFiClient *client, const char* host, const int port)
   return true;
 }
 
+// Appends `line` to the GSheet
 bool sendData(String line) {
   WiFiClientSecure client;
   client.setInsecure();
@@ -168,6 +178,7 @@ void I2CwriteByte(uint8_t Address, uint8_t Register, uint8_t Data) {
   Wire.endTransmission();
 }
 
+// Retrieve the current timestamp from worldclock api. Returns a string eg "currentDateTime":"2019-11-26T09:49Z"
 String getCurrentTimestamp() {
   WiFiClient client;
   String response = "";
@@ -185,6 +196,7 @@ String getCurrentTimestamp() {
   return(line);
 }
  
+// Runs on ESP boot
 void setup() {
   Serial.begin(115200);
   connectToWifi();
@@ -228,11 +240,8 @@ void setup() {
 
   // Get a baseline reading
   Serial.println("Remove weight from the crutch for baseline reading");
-  Serial.printf("BSSL stack: %d\n", stack_thunk_get_max_usage());
   zeroFactor = scale.read_average();
-  Serial.printf("BSSL stack: %d\n", stack_thunk_get_max_usage());
   Serial.println("Ok.");
-  Serial.printf("BSSL stack: %d\n", stack_thunk_get_max_usage());
   pinMode(13, OUTPUT);
 
   // Store initial time
@@ -240,6 +249,9 @@ void setup() {
   startTime = micros();
 }
 
+// This is a solution to avoid the use of a real time clock module
+// We upload current datetime and corresponding millis() value to GSheet
+// Where millis is the number of milliseconds since ESP boot. It overflows every 50 days.
 bool uploadDatetimeMillis() {
   Serial.println("Uploading new datetime");
   if(sendData(getCurrentTimestamp() + ",Arduino_milliseconds=" + millis()))
@@ -248,46 +260,43 @@ bool uploadDatetimeMillis() {
   return false;
 }
 
+// Compare weight on crutch to a pre configured value to determine if the crutch is in use
 bool crutchInUse() {
-  // detect when crutch is in use
-    scale.set_scale(calibrationFactor);
-    pressure = scale.get_units(), 10;
+  scale.set_scale(calibrationFactor);
+  pressure = scale.get_units(), 10;
   if(abs(pressure) >= 5){
     return true;
   }
   return true; //false;
 }
 
-void collectWeightMeasurement(){
-    // take reading from sensor in grams
-    force = scale.get_units(), 10;
-
-    // convert to kg
-    float kg_force = abs(force)/1000.00;
-
-    // debug
-    Serial.println(kg_force);
-    
-    // threshold for amount of weight placed through crutch
-    threshold = 1.5; 
-    
-    // allow for 5% variability in the threshold
-    upper_bound = 1.05*threshold;
-    lower_bound = 0.95*threshold;
-
-    // if too much force is being placed through the crutch, light led and vibrate motor
-    if(abs(kg_force) > upper_bound){
-      // turn on
-      digitalWrite(LED_RED_PIN, LOW);
-      digitalWrite(MOTOR_PIN, HIGH);
-    }
-    else{
-      // turn off
-      digitalWrite(LED_RED_PIN,HIGH);
-      digitalWrite(MOTOR_PIN, LOW);
-    }
+// Returns a float of weight applied through crutch in kg
+float collectWeightMeasurement(){
+  // take reading from sensor in grams
+  force = scale.get_units(), 10;
+  // convert to kg
+  float kg_force = abs(force)/1000.00;
+  return(kg_force);
 }
 
+// Compare the weight through crutch with the threshold and alert user if weight is too high
+void checkWeight() {
+  kg_force = collectWeightMeasurement();
+ 
+  // allow for 5% variability in the threshold
+  upper_bound = 1.05*WEIGHT_THRESHOLD;
+  lower_bound = 0.95*WEIGHT_THRESHOLD;
+
+  // if too much force is being placed through the crutch, light led and vibrate motor
+  while(abs(kg_force) > upper_bound){
+    digitalWrite(LED_RED_PIN, LOW);
+    digitalWrite(MOTOR_PIN, HIGH);
+  }
+  digitalWrite(LED_RED_PIN, HIGH);
+  digitalWrite(MOTOR_PIN, LOW);
+}
+
+// Collect a gait sample with IMU and load cell and write it to memory
 bool collectGaitSample() {
   File appendLog = SPIFFS.open("/log.csv", "a");
   appendLog.print("Start_of_sample|");
@@ -345,6 +354,7 @@ bool collectGaitSample() {
   appendLog.close();
 }
 
+// Attempt to connect to Google, determining if there is an internet connection
 bool wifiConnected() {
   WiFiClient client;
   String response = "";
@@ -355,11 +365,13 @@ bool wifiConnected() {
   return true;
 }
 
+// Overwrite the file in memory with a blank one
 void clearData() {
   File writeLog = SPIFFS.open("/log.csv", "w");
   writeLog.close();
 }
 
+// Attempt to upload a gait sample to the GSheet, returning false if unsuccesful and true if successful
 bool uploadNewData() {
   Serial.println("Uploading new data");
   if (!sendData("New_upload"))
@@ -393,7 +405,7 @@ void loop() {
     Serial.print("Sample collected, samples today = ");
     Serial.println(samples_today);
     uploaded_new_data = false;
-    collectWeightMeasurement();
+    checkWeight();
   }
   
   if (!uploaded_new_data) { // If new data exists but hasn't been uploaded yet
