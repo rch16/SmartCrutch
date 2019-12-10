@@ -26,8 +26,8 @@
 #define LOAD_DOUT_PIN 12
 #define LOAD_CLK_PIN 14
 
-#define LED_RED_PIN 0
-#define LED_BLUE_PIN 2
+#define LED_RED_PIN 2
+#define LED_BLUE_PIN 0
 #define LED_GREEN_PIN 16
 #define MOTOR_PIN 15
 
@@ -217,9 +217,9 @@ void setup() {
   pinMode(LED_GREEN_PIN, OUTPUT);
   pinMode(LED_BLUE_PIN, OUTPUT);
   // start off
-  digitalWrite(LED_RED_PIN, HIGH);
-  digitalWrite(LED_GREEN_PIN, HIGH);
-  digitalWrite(LED_BLUE_PIN, HIGH);
+  digitalWrite(LED_RED_PIN, LOW);
+  digitalWrite(LED_GREEN_PIN, LOW);
+  digitalWrite(LED_BLUE_PIN, LOW);
 
   // initialize motor pin
   pinMode(MOTOR_PIN, OUTPUT);
@@ -278,12 +278,12 @@ void collectWeightMeasurement(){
     // if too much force is being placed through the crutch, light led and vibrate motor
     if(abs(kg_force) > upper_bound){
       // turn on
-      digitalWrite(LED_RED_PIN, LOW);
+      digitalWrite(LED_RED_PIN, HIGH);
       digitalWrite(MOTOR_PIN, HIGH);
     }
     else{
       // turn off
-      digitalWrite(LED_RED_PIN,HIGH);
+      digitalWrite(LED_RED_PIN,LOW);
       digitalWrite(MOTOR_PIN, LOW);
     }
 }
@@ -293,7 +293,7 @@ bool collectGaitSample() {
   appendLog.print("Start_of_sample|");
 
   // take reading from sensor in grams
-  float force = scale.get_units(), 10;
+  force = scale.get_units(), 10;
 
   // convert to kg
   float kg_force = abs(force)/1000.00;
@@ -386,6 +386,7 @@ bool uploaded_time_stamp = false;
 bool uploaded_new_data = false;
 
 void loop() {
+  collectWeightMeasurement();
   if (crutchInUse() && samples_today < DAILY_SAMPLES) { // If weight is being applied to the crutch and we haven't collected more than DAILY_SAMPLES
     scale.set_scale(calibrationFactor);
     collectGaitSample();
@@ -393,7 +394,6 @@ void loop() {
     Serial.print("Sample collected, samples today = ");
     Serial.println(samples_today);
     uploaded_new_data = false;
-    collectWeightMeasurement();
   }
   
   if (!uploaded_new_data) { // If new data exists but hasn't been uploaded yet

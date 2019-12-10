@@ -30,9 +30,9 @@ void setup() {
   pinMode(LED_GREEN_PIN, OUTPUT);
   pinMode(LED_BLUE_PIN, OUTPUT);
   // start off
-  digitalWrite(LED_RED_PIN, HIGH);
-  digitalWrite(LED_GREEN_PIN, HIGH);
-  digitalWrite(LED_BLUE_PIN, HIGH);
+  digitalWrite(LED_RED_PIN, LOW);
+  digitalWrite(LED_GREEN_PIN, LOW);
+  digitalWrite(LED_BLUE_PIN, LOW);
 
   // initialize motor pin
   pinMode(MOTOR_PIN, OUTPUT);
@@ -61,12 +61,12 @@ void loop() {
 
   if(kg_units > upper_bound){
     // turn on
-    digitalWrite(LED_RED_PIN, LOW);
+    digitalWrite(LED_RED_PIN, HIGH);
     digitalWrite(MOTOR_PIN, HIGH);
   }
   else{
     // turn off
-    digitalWrite(LED_RED_PIN,HIGH);
+    digitalWrite(LED_RED_PIN,LOW);
     digitalWrite(MOTOR_PIN, LOW);
   }
   
