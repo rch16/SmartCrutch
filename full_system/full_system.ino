@@ -7,10 +7,9 @@
 #include "HX711.h"
 
 // Parameter Config
-#define SENSOR_SAMPLE_INTERVAL 10 // Interval between individual IMU/Weight samples in microseconds
-#define SENSOR_SAMPLE_SIZE 200 // Number of sensor samples in each period
-#define DAILY_SAMPLES 5 // Number of gait samples per day
-#define WEIGHT_THRESHOLD 1.5 // threshold for excess weight placed through crutch
+#define SENSOR_SAMPLE_INTERVAL 10000 // Interval between individual IMU/Weight samples in microseconds
+#define SENSOR_SAMPLE_SIZE 300 // Number of sensor samples in each period
+#define DAILY_SAMPLES 100 // Number of gait samples per day
 
 // i2c addresses
 #define MPU9250_ADDRESS 0x68
@@ -28,8 +27,8 @@
 #define ACC_FULL_SCALE_16_G 0x18
 
 // Pin Definitions
-#define LOAD_DOUT_PIN 12
-#define LOAD_CLK_PIN 14
+#define LOAD_DOUT_PIN 14
+#define LOAD_CLK_PIN 12
 
 #define LED_RED_PIN 2
 #define LED_BLUE_PIN 0
@@ -56,13 +55,12 @@ long startTime;
 
 // Loadcell reading
 long zeroFactor; // baseline
+float upper_bound;
 float pressure;
 float measure;
 float force;
 float calibrationFactor = 70;
 float threshold; // threshold for amount of weight placed through crutch
-float upper_bound;
-float lower_bound;
 float kg_force;
 
 // Search for WiFi networks and join the first recognised
@@ -113,6 +111,8 @@ bool connectToSecureHost(BearSSL::WiFiClientSecure *client, const char* host, co
 
 // Same as above but http
 bool connectToInsecureHost(WiFiClient *client, const char* host, const int port) {
+  Serial.println(host);
+  Serial.println(port);
   int response = client->connect(host, port);
   if (!response) {
     Serial.print("Connection to ");
@@ -184,7 +184,7 @@ String getCurrentTimestamp() {
   WiFiClient client;
   String response = "";
   Serial.print("Connecting to worldclockapi.com");
-  if (!connectToInsecureHost(&client, "worldclockapi.com", 80)) {
+  if (!connectToInsecureHost(&client, "www.worldclockapi.com", 80)) {
     return "Error connecting to worldclockapi.com";
   }
   client.println("GET /api/json/utc/now HTTP/1.1\r\nHost: worldclockapi.com\r\n");
@@ -264,8 +264,6 @@ bool uploadDatetimeMillis() {
 float collectWeightMeasurement(){
   // take reading from sensor in grams
   force = scale.get_units(), 10;
-  Serial.print("force: ");
-  Serial.println(force);
   // convert to kg
   kg_force = abs(force)/1000.00;
   return(kg_force);
@@ -281,20 +279,14 @@ bool crutchInUse() {
   return false;
 }
 // Compare the weight through crutch with the threshold and alert user if weight is too high
-void checkWeight() {
+void checkWeight(int weight_threshold) {
   kg_force = collectWeightMeasurement();
  
-  // allow for 5% variability in the threshold
-  upper_bound = 1.05*WEIGHT_THRESHOLD;
-  lower_bound = 0.95*WEIGHT_THRESHOLD;
-
   // if too much force is being placed through the crutch, light led and vibrate motor
-  Serial.println("kg_force: ");
   Serial.println(kg_force);
-  
-  if (abs(kg_force) > upper_bound){
+  Serial.println(weight_threshold);
+  if (abs(kg_force) > weight_threshold){
     // on
-    Serial.println("HERE");
     digitalWrite(LED_RED_PIN, HIGH);
     digitalWrite(MOTOR_PIN, HIGH);
   } else {
@@ -309,12 +301,6 @@ bool collectGaitSample() {
   File appendLog = SPIFFS.open("/log.csv", "a");
   appendLog.print("Start_of_sample|");
 
-  // take reading from sensor in grams
-  force = scale.get_units(), 10;
-
-  // convert to kg
-  kg_force = abs(force)/1000.00;
-
   for(int n = 0; n <= SENSOR_SAMPLE_SIZE; n++) {
     newTime = micros();
     while((newTime - oldTime) < SENSOR_SAMPLE_INTERVAL){
@@ -324,7 +310,11 @@ bool collectGaitSample() {
     // Read accelerometer and gyroscope
     uint8_t Buf[14];
     I2Cread(MPU9250_ADDRESS,0x3B,14,Buf);
+
     
+//    Serial.println(micros());
+//    kg_force = collectWeightMeasurement();
+//    Serial.println(micros());
     // Create 16 bits values from 8 bits data
     // Accelerometer
     int16_t ax=-(Buf[0]<<8 | Buf[1]);
@@ -355,7 +345,7 @@ bool collectGaitSample() {
     appendLog.print(',');
     
     // Append load cell data to the log
-    appendLog.print(kg_force);
+//    appendLog.print(kg_force);
     appendLog.print('|');
   }
   appendLog.print("End_of_sample|");
@@ -389,10 +379,8 @@ bool uploadNewData() {
   File readLog = SPIFFS.open("/log.csv", "r");
   String line = readLog.readStringUntil('|');
   while(line.length() > 0) {
-    Serial.println(line);
-    if (!sendData(line))
-      return false;
     line = readLog.readStringUntil('|');
+    Serial.println(line);
   }
   if (!sendData("Upload end"))
     return false;
@@ -401,31 +389,39 @@ bool uploadNewData() {
   return true;
 }
 
+int getWeightThreshold() {
+  WiFiClient client;
+  String response = "";
+  Serial.print("Connecting to weight threshold api");
+  if (!connectToInsecureHost(&client, "a1cc6d56.ngrok.io", 80)) {
+  }
+  client.println("GET /api/get_threshold HTTP/1.1\r\nHost: a1cc6d56.ngrok.io\r\n");
+  String line = client.readStringUntil('\n');
+  line = client.readStringUntil('\n');
+  line = client.readStringUntil('\n');
+  line = client.readStringUntil('\n');
+  line = client.readStringUntil('\n');
+  line = client.readStringUntil('\n');
+  line = client.readStringUntil('\n');
+  line = client.readStringUntil('\n');
+  Serial.println(line);
+  client.println("Connection: close");
+  client.println();
+  return(line.toInt());
+}
+
 int samples_today = 0;
-bool uploaded_time_stamp = false;
-bool uploaded_new_data = false;
-int loop_number = 0;
+bool uploaded_new_data = true;
+int weight_threshold = 600;
+int loops = 0;
 
 void loop() {
-  loop_number++;
-  checkWeight();
-  if (crutchInUse() && samples_today < DAILY_SAMPLES) { // If weight is being applied to the crutch and we haven't collected more than DAILY_SAMPLES
-    scale.set_scale(calibrationFactor);
-    collectGaitSample();
-    samples_today++;
-    Serial.print("Sample collected, samples today = ");
-    Serial.println(samples_today);
-    uploaded_new_data = false;
-  }
-  
-  if (!uploaded_new_data && loop_number > 10000) { // If new data exists but hasn't been uploaded yet
-    if (!wifiConnected()) { // Check if wifi connection exists by connecting to google
-      connectToWifi(); 
-    }
-    if (wifiConnected()) {  
-      uploaded_new_data = uploadNewData();
-    }
-    loop_number = 0;
-  }
+  checkWeight(weight_threshold);
   delay(10);
+  loops++;
+  if (loops == 200) {
+    loops = 0;
+    Serial.println("Getting weight threshold");
+    weight_threshold = getWeightThreshold();
+  }
 }

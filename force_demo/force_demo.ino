@@ -52,13 +52,13 @@ void loop() {
 
   scale.set_scale(calibrationFactor); //Adjust to this calibration factor
 
-  units = scale.get_units(10), 2;
-
-  Serial.println(units);
+  units = scale.get_units(), 10;
   
   kg_units = units/1000;
+
+  Serial.println(abs(kg_units));
   
-  float threshold = 1.5; // threshold for amount of weight placed through crutch
+  float threshold = 8; // threshold for amount of weight placed through crutch
   // allow for 5% variability in the threshold
   float upper_bound = 1.05*threshold;
   float lower_bound = 0.95*threshold;
