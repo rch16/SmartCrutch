@@ -7,10 +7,10 @@
 #include "HX711.h"
 
 // Parameter Config
-#define SENSOR_SAMPLE_INTERVAL 10000 // Interval between individual IMU/Weight samples in microseconds
-#define SENSOR_SAMPLE_SIZE 1 // Number of sensor samples in each period
+#define SENSOR_SAMPLE_INTERVAL 10 // Interval between individual IMU/Weight samples in microseconds
+#define SENSOR_SAMPLE_SIZE 200 // Number of sensor samples in each period
 #define DAILY_SAMPLES 5 // Number of gait samples per day
-#define WEIGHT_THRESHOLD = 1.5 // threshold for excess weight placed through crutch
+#define WEIGHT_THRESHOLD 1.5 // threshold for excess weight placed through crutch
 
 // i2c addresses
 #define MPU9250_ADDRESS 0x68
@@ -63,6 +63,7 @@ float calibrationFactor = 70;
 float threshold; // threshold for amount of weight placed through crutch
 float upper_bound;
 float lower_bound;
+float kg_force;
 
 // Search for WiFi networks and join the first recognised
 void connectToWifi() {
@@ -200,7 +201,6 @@ String getCurrentTimestamp() {
 void setup() {
   Serial.begin(115200);
   connectToWifi();
-  Serial.printf("BSSL stack: %d\n", stack_thunk_get_max_usage());
   Wire.begin();
   SPIFFS.begin();
   
@@ -260,25 +260,26 @@ bool uploadDatetimeMillis() {
   return false;
 }
 
-// Compare weight on crutch to a pre configured value to determine if the crutch is in use
-bool crutchInUse() {
-  scale.set_scale(calibrationFactor);
-  pressure = scale.get_units(), 10;
-  if(abs(pressure) >= 5){
-    return true;
-  }
-  return true; //false;
-}
-
 // Returns a float of weight applied through crutch in kg
 float collectWeightMeasurement(){
   // take reading from sensor in grams
   force = scale.get_units(), 10;
+  Serial.print("force: ");
+  Serial.println(force);
   // convert to kg
-  float kg_force = abs(force)/1000.00;
+  kg_force = abs(force)/1000.00;
   return(kg_force);
 }
 
+// Compare weight on crutch to a pre configured value to determine if the crutch is in use
+bool crutchInUse() {
+  scale.set_scale(calibrationFactor);
+  kg_force = collectWeightMeasurement();
+  if(abs(kg_force) >= 1){
+    return true;
+  }
+  return false;
+}
 // Compare the weight through crutch with the threshold and alert user if weight is too high
 void checkWeight() {
   kg_force = collectWeightMeasurement();
@@ -288,12 +289,19 @@ void checkWeight() {
   lower_bound = 0.95*WEIGHT_THRESHOLD;
 
   // if too much force is being placed through the crutch, light led and vibrate motor
-  while(abs(kg_force) > upper_bound){
-    digitalWrite(LED_RED_PIN, LOW);
+  Serial.println("kg_force: ");
+  Serial.println(kg_force);
+  
+  if (abs(kg_force) > upper_bound){
+    // on
+    Serial.println("HERE");
+    digitalWrite(LED_RED_PIN, HIGH);
     digitalWrite(MOTOR_PIN, HIGH);
+  } else {
+    // off
+    digitalWrite(LED_RED_PIN, LOW);
+    digitalWrite(MOTOR_PIN, LOW);
   }
-  digitalWrite(LED_RED_PIN, HIGH);
-  digitalWrite(MOTOR_PIN, LOW);
 }
 
 // Collect a gait sample with IMU and load cell and write it to memory
@@ -305,7 +313,7 @@ bool collectGaitSample() {
   force = scale.get_units(), 10;
 
   // convert to kg
-  float kg_force = abs(force)/1000.00;
+  kg_force = abs(force)/1000.00;
 
   for(int n = 0; n <= SENSOR_SAMPLE_SIZE; n++) {
     newTime = micros();
@@ -396,9 +404,11 @@ bool uploadNewData() {
 int samples_today = 0;
 bool uploaded_time_stamp = false;
 bool uploaded_new_data = false;
+int loop_number = 0;
 
 void loop() {
-  collectWeightMeasurement();
+  loop_number++;
+  checkWeight();
   if (crutchInUse() && samples_today < DAILY_SAMPLES) { // If weight is being applied to the crutch and we haven't collected more than DAILY_SAMPLES
     scale.set_scale(calibrationFactor);
     collectGaitSample();
@@ -406,16 +416,16 @@ void loop() {
     Serial.print("Sample collected, samples today = ");
     Serial.println(samples_today);
     uploaded_new_data = false;
-    checkWeight();
   }
   
-  if (!uploaded_new_data) { // If new data exists but hasn't been uploaded yet
+  if (!uploaded_new_data && loop_number > 10000) { // If new data exists but hasn't been uploaded yet
     if (!wifiConnected()) { // Check if wifi connection exists by connecting to google
       connectToWifi(); 
     }
     if (wifiConnected()) {  
       uploaded_new_data = uploadNewData();
     }
+    loop_number = 0;
   }
-
+  delay(10);
 }

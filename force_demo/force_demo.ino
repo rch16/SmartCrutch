@@ -1,7 +1,7 @@
 #include "HX711.h"
 
-#define LOAD_DOUT_PIN 12
-#define LOAD_CLK_PIN 14
+#define LOAD_DOUT_PIN 14
+#define LOAD_CLK_PIN 12
 #define LED_BLUE_PIN 0
 #define LED_RED_PIN 2
 #define LED_GREEN_PIN 16
@@ -16,9 +16,10 @@ float pressure;
 float units;
 float ounces;
 float calibrationFactor = 70;
+float kg_units;
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   Serial.println("HX711 calibration sketch");
   Serial.println("Remove all weight from scale");
   Serial.println("After readings begin, place known weight on scale");
@@ -51,8 +52,11 @@ void loop() {
 
   scale.set_scale(calibrationFactor); //Adjust to this calibration factor
 
-  units = scale.get_units(), 10;
-  float kg_units = units/1000;
+  units = scale.get_units(10), 2;
+
+  Serial.println(units);
+  
+  kg_units = units/1000;
   
   float threshold = 1.5; // threshold for amount of weight placed through crutch
   // allow for 5% variability in the threshold
@@ -70,8 +74,8 @@ void loop() {
     digitalWrite(MOTOR_PIN, LOW);
   }
   
-  Serial.print("Reading: ");
-  Serial.println(abs(kg_units));
+  //Serial.print("Reading: ");
+  //Serial.println(abs(kg_units));
   //Serial.print("     Calibration Factor: ");
   //Serial.println(calibrationFactor);
 
