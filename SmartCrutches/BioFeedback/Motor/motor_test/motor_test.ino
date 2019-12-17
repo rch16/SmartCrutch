@@ -1,31 +1,18 @@
-int red = 2;
-int green = 16;
-int blue = 0;
+#define MOTOR_PIN 15
  
 // the setup routine runs once when you press reset:
 void setup()
 {
-// initialize the digital pin as an output.
-pinMode(red, OUTPUT);
-pinMode(green, OUTPUT);
-pinMode(blue, OUTPUT);
-digitalWrite(red, HIGH);
-digitalWrite(green, HIGH);
-digitalWrite(blue, HIGH);
+  // initialize motor pin
+  pinMode(MOTOR_PIN, OUTPUT);
+  // start off
+  digitalWrite(MOTOR_PIN, LOW);
 }
  
 // the loop routine runs over and over again forever:
 void loop() {
-digitalWrite(red, LOW); // turn the LED on 
-delay(1000); // wait for a second
-digitalWrite(red, HIGH); // turn the LED off by making the voltage LOW
-delay(1000); // wait for a second
-digitalWrite(green, LOW); // turn the LED on 
-delay(1000); // wait for a second
-digitalWrite(green, HIGH); // turn the LED off by making the voltage LOW
-delay(1000); // wait for a second
-digitalWrite(blue, LOW); // turn the LED on
-delay(1000); // wait for a second
-digitalWrite(blue, HIGH); // turn the LED off by making the voltage LOW
-delay(1000); // wait for a second
+    digitalWrite(MOTOR_PIN, HIGH); // turn motor on
+    delay(5000); // wait for 5s
+    digitalWrite(MOTOR_PIN, HIGH); // turn motor off
+    delay(5000); // wait for 5s
 }

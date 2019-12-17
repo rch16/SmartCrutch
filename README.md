@@ -6,18 +6,28 @@ This project can be split into two stand alone systems, with the following Folde
 ## 1. SmartCrutch
 The code is written for use on an Adafruit Feather HUZZAH. This can be interfaced with using the Arduino IDE, found [here](https://www.arduino.cc/en/main/software). To set this IDE up for use with the Huzzah board, [these instructions](https://learn.adafruit.com/adafruit-feather-huzzah-esp8266/using-arduino-ide) should be followed. Additionally, a library must be installed and added to the Libary manager of the IDE to allow for interfacing with the HX711 (A load cell amplifier) - to reduce the risk of compatability errors experienced during implementation of the projcet, this can be found in this repo (more information below). 
 
+1. **BioFeedback**
+    1. **LED**
+        1. **RGB Led Datasheeet**
+        2. **led_test/led_test.ino**: *Code for testing operation of LEDs in feedback system. Cycles through RGB colours, changing colour every second.*
+    2. **CoinMotor**
+        1. **Vibration Motor datasheet**
+        2. **motor_test/motor_test.ino**: *Code for testing operation of Motors in feedback system. Pulses motor on/off every 5s.*
+2. **DataAnalysis**
+    1. **spreadsheet.py**: ??
+    2. **TimedTask.py**: ??
+3. **LoadCell**
+    1. **HX711**: *Folder containing Library and other useful materials to be included in the Arduino IDE Library manager.*
+    2. **force_demo/force_demo.ino**: *Code for testing and demonstration of operation of Weight Sensor, LED and Motors in feedback system. Allows for calibration of weight sensor, Prints readings to the Serial Monitor and activiates Motor and LED above a threshold defined in the code.*
+    3. **HX711 Datasheet**
+4. **FullSystem**
+    1. **full_system/full_system.ino**: *Code for full operation of on-crutch system.*
+    2. **Wiring Diagram**
+    3. **System Schematic**
+5. **IMU**
+    1. **imu_demo/imu_demo.ino**: *Code for testing and demonstration of operation of IMU.*
+    2. **MPU9250 Datasheet**
 
-| Folders     | Subfolders  | Files    |  Contents               |
-| ----------- |-------------| ---------|-------------------------|
-| BioFeedback | LED         | datasheet| Datasheet for RGB LED |
-|             |             | led_test | Folder containing led_test.ino code for testing operation of LEDs in feedback system. Cycles through RGB colours, changing colour every second. |
-|             | CoinMotor   | datasheet | Datasheet for coin motor **ADD** |
-|             |             | motor_test| Folder containing motor_test.ino code for testing operation of Motors in feedback system. Pulses motor. |
-| LoadCell    | HX711       | *various* |Folder containing Library and other useful materials to be included in the Arduino IDE Library manager. |
-|             |             | force_demo| Folder containing force_demo.ino code for testing operation of Weight Sensor, LED and Motors in feedback system. Allows for calibration of weight sensor, Prints readings to the Serial Monitor and activiates Motor and LED above a threshold defined in the code. |
-| FullSystem  |             |             |             |
-| IMU         |             |             |             |
-| DataAnalysis|             |             |             |
 
 
 #### 2. ExerciseTracker
