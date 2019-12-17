@@ -11,17 +11,19 @@ The code is written for use on an Adafruit Feather HUZZAH. This can be interface
 | ----------- |---------------| ------------|-------------------------|
 | BioFeedback | LED           | RGB Led Datasheet   | Datasheet for RGB LED |
 |             |               | led_test    | Folder containing led_test.ino code for testing operation of LEDs in feedback system. Cycles through RGB colours, changing colour every second. |
-|             | CoinMotor     | Vibration Motor datasheet    | Datasheet for coin motor **ADD** |
-|             |               | motor_test   | Folder containing motor_test.ino code for testing operation of Motors in feedback system. Pulses motor.|
+|             | CoinMotor     | Vibration Motor datasheet    | Datasheet for coin motor|
+|             |               | motor_test   | Folder containing motor_test.ino code for testing operation of Motors in feedback system. Pulses motor on/off every 5s.|
+| DataAnalysis|spreadsheet.py|              |             |
+|             |TimedTask.py|              |             |
 | LoadCell    | HX711         | *various*    |Folder containing Library and other useful materials to be included in the Arduino IDE Library manager.  |
 |             |force_demo     |force_demo.ino|Code for testing and demonstration of operation of Weight Sensor, LED and Motors in feedback system. Allows for calibration of weight sensor, Prints readings to the Serial Monitor and activiates Motor and LED above a threshold defined in the code. |
 |             |HX711 Datasheet|              |Datasheet for Load Cell Amplifier.|
 |FullSystem   |full_system     |full_system.ino|Code for full operation of on-crutch system.|
-|             |Wiring Diagram     |full_system.ino|Code for full operation of on-crutch system.|
-|             |System Schematic|full_system.ino|Code for full operation of on-crutch system.|
+|             |Wiring Diagram     | |Wiring diagram of full on-crutch system.|
+|             |System Schematic|full_system.ino|System schematic of full on-crutch system.|
 |IMU          |imu_demo     |imu_demo.ino|Code for testing and demonstration of operation of IMU. |
 |             |MPU9250 Datasheet|              |Datasheet for MPU9250.|
-| DataAnalysis|             |              |             |
+
 
 
 #### 2. ExerciseTracker
