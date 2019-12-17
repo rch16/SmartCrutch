@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.example.hcr_app.ui.home.HomeFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/nav_gallery"
+        android:name="com.example.hcr_app.ui.gallery.GalleryFragment"
+        android:label="@string/menu_gallery"
+        tools:layout="@layout/fragment_gallery" />
+
+    <fragment
+        android:id="@+id/nav_start"
+        android:name="com.example.hcr_app.ui.run.StartFragment"
+        android:label="@string/menu_run"
+        tools:layout="@layout/fragment_start">
+         <action
+            android:id="@+id/go_to_run"
+            app:destination="@id/nav_run"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/slide_out"
+        />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_run"
+        android:name="com.example.hcr_app.ui.run.RunFragment"
+        android:label="@string/menu_run"
+        tools:layout="@layout/fragment_run">
+        <action
+            android:id="@+id/go_to_start"
+            app:destination="@id/nav_start"
+            app:enterAnim="@anim/slide_out"
+            app:exitAnim="@anim/slide_in"
+            />
+        <action
+            android:id="@+id/go_to_self"
+            app:destination="@id/nav_run"
+            app:enterAnim="@anim/slide_out"
+            app:exitAnim="@anim/slide_in"
+            />
+    </fragment>
+</navigation>
