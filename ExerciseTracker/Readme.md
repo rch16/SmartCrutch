@@ -44,64 +44,33 @@ To install all packages from the this repository as Debian packages use
 To build from source, clone the latest version from this repository into your catkin workspace and compile the package using
 
 	cd catkin_workspace/src
-	git clone https://github.com/ethz-asl/ros_package_template.git
+	git clone https://github.com/rch16/SmartCrutch/tree/master/ExerciseTracker/ROS
 	cd ../
 	catkin_make
 
 
-#### Unit Tests
-
-Run the unit tests with
-
-	catkin_make run_tests_ros_package_template
-
-
 ### Usage
+Run the OpenNi launcher to start Kinect with 
+	roslaunch ROS start.launch
+Run the tf listener and OpenNi skeletal tracker with 
+	roslaunch ROS start2.launch
 
-Describe the quickest way to run this software, for example:
 
-Run the main node with
-
-	roslaunch ros_package_template ros_package_template.launch
-
-### Config files
-
-Config file folder/set 1
-
-* **config_file_1.yaml** Shortly explain the content of this config file
-
-Config file folder/set 2
-
-* **...**
-
-### Launch files
-
-* **launch_file_1.launch:** shortly explain what is launched (e.g standard simulation, simulation with gdb,...)
-
-     Argument set 1
-
-     - **`argument_1`** Short description (e.g. as commented in launch file). Default: `default_value`.
-
-    Argument set 2
-
-    - **`...`**
-
-* **...**
 
 ### Nodes
 
-#### ros_package_template
+#### OpenNi launch
+Launch files to open an OpenNI device and load all nodelets to convert raw depth/RGB/IR streams to depth images, disparity images, and (registered) point clouds.
 
-Reads temperature measurements and computed the average.
+#### OpenNi tracker
+Detects users in the Kinect frame and perform calibration. After this is successful, broadcast the tf over the /tf topic.
 
+#### tf_Listener
+Listens to the /tf broadcasted by the OpenNi tracker and inserts the data into a queue for api.py to process
 
 ##### Subscribed Topics
+/tf (Transform of the planes with respect to the head)
+There are subtopics such as 
+/head,/neck,/torso,/left_shoulder,/left_elbow,/left_hand,/right_shoulder,/right_elbow,/right_hand,/left_hip,/left_knee,/left_foot,/right_hip,/right_knee,/right_foot
+For example to access the head subtopic, subscribe to /tf/head
 
-* **`/temperature`** ([sensor_msgs/Temperature])
-
-	The temperature measurements from which the average is computed.
-
-
-##### Published Topics
-
-...
