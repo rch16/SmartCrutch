@@ -71,6 +71,20 @@ Listens to the /tf broadcasted by the OpenNi tracker and inserts the data into a
 ##### Subscribed Topics
 /tf (Transform of the planes with respect to the head)
 There are subtopics such as 
-/head,/neck,/torso,/left_shoulder,/left_elbow,/left_hand,/right_shoulder,/right_elbow,/right_hand,/left_hip,/left_knee,/left_foot,/right_hip,/right_knee,/right_foot
+* /head
+* /neck
+* /torso
+* /left_shoulder
+* /left_elbow
+* /left_hand
+* /right_shoulder
+* /right_elbow
+* /right_hand
+* /left_hip
+* /left_knee
+* /left_foot
+* /right_hip
+* /right_knee
+* /right_foot
 For example to access the head subtopic, subscribe to /tf/head
 
