@@ -1,4 +1,4 @@
-# Package Name
+# Exercis tracker
 
 ## Installation
 
@@ -13,9 +13,10 @@ To install all packages from the this repository as Debian packages use
 #### Dependencies
 
 - [Robot Operating System (ROS)](http://wiki.ros.org) (middleware for robotics),
-- [Eigen] (linear algebra library)
+- [OpenNi launcher](http://wiki.ros.org/openni_launch)(Driver for Kinect) ,
 
-		sudo apt-get install libeigen3-dev
+### ROS Dependencies 
+- [rosbridge-server] (http://wiki.ros.org/rosbridge_suite)
 
 
 #### Building
