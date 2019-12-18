@@ -28,19 +28,21 @@ This repository contains all the schematics, code and instructions required to r
 Located within the SmartCrutches Folder:
 
 **IMU**:
-* **/imu_demo/imu_demo.ino**: Code for testing and demonstration of operation of IMU
+* **imu_demo/imu_demo.ino**: Code for testing and demonstration of operation of IMU
 
 **LoadCell**:
-* **/force_demo/force_demo.ino**: Code for testing and demonstration of operation of Weight Sensor, LED and Motors in feedback system. Allows for calibration of weight sensor, Prints readings to the Serial Monitor and activiates Motor and LED above a threshold defined in the code.
+* **force_demo/force_demo.ino**: Code for testing and demonstration of operation of Weight Sensor, LED and Motors in feedback system. Allows for calibration of weight sensor, Prints readings to the Serial Monitor and activiates Motor and LED above a threshold defined in the code.
 
 **BioFeedback**:
-* **/LED/led_test/led_test.ino**: Code for testing operation of LEDs in feedback system. Cycles through RGB colours, changing colour every second.
-* **/Motor/motor_test/motor_test.ino**: Code for testing operation of Motors in feedback system. Pulses motor on/off every 5s.
+* **LED/led_test/led_test.ino**: Code for testing operation of LEDs in feedback system. Cycles through RGB colours, changing colour once a second.
+* **Motor/motor_test/motor_test.ino**: Code for testing operation of Motors in feedback system. Pulses motor on/off every 5s.
 
 **FullSystem**:
-* **/full_system/full_system.ino**: Code for full operation of on-crutch system.
+* **full_system/full_system.ino**: Code for full operation of on-crutch system.
 
 ## Data Transfer
+
+
 ## Data Analysis
 
 The following two scripts perform the data analysis
