@@ -64,7 +64,7 @@ To get the on-crutch system running, download, compile and load the code onto yo
 
 ## Hardware
 
-Requirements to use the Exercise Tracker is to have a Kinect camera connected to a computer which can run all the scripts listed in the ExerciseTracker folder.
+The only hardware requirement to use the Exercise Tracker is to have a Kinect camera, connected to a computer. This computer must be able to run all the scripts listed in the ExerciseTracker folder.
 
 ## Data Analysis
 
@@ -72,13 +72,13 @@ visual_plot.py can be used to plot the skeletal profiles from the coordinates of
 
 ## Mobile App
 
-To be able to interact with the mobile application the API and the ROS nodes need to be running. Further, the mobile application will need to redirect itself to the internet address of the API server.
+To be able to interact with the mobile application the API and the ROS nodes need to be running. This is because the mobile application will need to redirect itself to the internet address of the API server.
 
 ## API
 
 ### Installation of dependencies
 
-To install libraries used you will want to use:
+To install libraries used, in Mac OS/Linux Terminal or Windows Command Prompt:
 
     pip install [Library Name]
 
@@ -86,11 +86,11 @@ Some of the libraries used are flask, numpy and pandas.
 
 ### Config files
 
-To change the exercises that the tracker can track you will want to edit the CSV files which contain the coordinates that translate to the vectors of a correct execution.
+To change the exercises that the tracker can track, you will want to edit the CSV files. These contain the coordinates that translate to the vectors of a correct execution.
 
 ### Run API
 
-To run the API you will need to make sure that all the ROS nodes are running. Once this is done we can run the API which will than be accesible to the app. Run the API by using:
+To run the API, you will to ensure that all the ROS nodes are running. Once this is done the API can be run, which will than be accesible to the app. Run the API by using:
 
     python api.py
 
@@ -100,7 +100,7 @@ To run the API you will need to make sure that all the ROS nodes are running. On
 
 #### Installation from Packages
 
-To install all packages from the this repository as Debian packages use
+To install all packages from this repository as Debian packages, use:
 
     sudo apt-get install ros-kinetic-[Name of dependencies]
 
@@ -116,7 +116,7 @@ To install all packages from the this repository as Debian packages use
 
 ##### Building
 
-To build from source, clone the latest version from this repository into your catkin workspace and compile the package using
+To build from source, clone the latest version from this repository into your catkin workspace and compile the package using the following commands:
 
 	cd catkin_workspace/src
 	git clone https://github.com/rch16/SmartCrutch/tree/master/ExerciseTracker/ROS
