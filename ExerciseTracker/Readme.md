@@ -1,8 +1,26 @@
 # Exercise tracker
 
-# API
+## API
 
-## ROS nodes 
+### Installation of dependencies
+
+To install libraries used you will want to use:
+
+    pip install [Library Name]
+
+Some of the libraries used are flask, numpy and pandas.
+
+### Config files
+
+To change the exercises that the tracker can track you will want to edit the CSV files which contain the coordinates that translate to the vectors of a correct execution.
+
+### Run API
+
+To run the API you will need to make sure that all the ROS nodes are running. Once this is done we can run the API which will than be accesible to the app. Run the API by using:
+
+    python api.py
+
+## ROS nodes
 ### Installation
 
 #### Installation from Packages
@@ -18,7 +36,7 @@ To install all packages from the this repository as Debian packages use
 - [Robot Operating System (ROS)](http://wiki.ros.org) (middleware for robotics),
 - [OpenNi launcher](http://wiki.ros.org/openni_launch) (Driver for Kinect) ,
 - [OpenNi tracker](http://wiki.ros.org/openni_tracker) (Skeletal tracking) ,
-- [rosbridge-server](http://wiki.ros.org/rosbridge_suite) (Communication between listener and api.py) 
+- [rosbridge-server](http://wiki.ros.org/rosbridge_suite) (Communication between listener and api.py)
 
 
 ##### Building
