@@ -1,0 +1,13 @@
+  <launch>
+    <!-- Turtlesim Node-->
+
+    <node name="ktf1" pkg="ktf" type="tf_listen.py" respawn="false" output="screen" >
+      <param name="turtle" type="string" value="turtle1" />
+    </node>
+    <node pkg="openni_tracker" type="openni_tracker" name="openni_trackers" output = "screen" />
+
+  <include file="/opt/ros/kinetic/share/rosbridge_server/launch/rosbridge_websocket.launch">
+  </include>
+
+
+  </launch>
