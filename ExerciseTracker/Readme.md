@@ -50,11 +50,11 @@ To build from source, clone the latest version from this repository into your ca
 
 
 ### Usage
-Run the OpenNi launcher to start Kinect with 
-Run the tf listener and OpenNi skeletal tracker with 
+Run the OpenNi launcher to start Kinect with start.launch and 
+run the tf listener and OpenNi skeletal tracker with start2.launch
 
-	roslaunch ROS start2.launch
 	roslaunch ROS start.launch
+	roslaunch ROS start2.launch
 
 
 
