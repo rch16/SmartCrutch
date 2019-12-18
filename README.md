@@ -48,11 +48,11 @@ The data analysis is done using two scripts:
 * **TimedTask.py**
 * **spreadsheet.py**
 
-**TimedTask.py** checks wether or not the new data has been added to the sheet. You can control how long it performs this check for and how often it checks by changing the parameters in **sleep** and **Repeatedimer** respectfully. To set up **TimedTask.py** you will need to use the sheetfu library to access the google sheets you want to use. This library was hosen over the official google api as it gives slightly more flexibility. 
+**TimedTask.py** checks wether or not the new data has been added to the sheet. You can control how long it performs this check for and how often it checks by changing the parameters in **sleep** and **Repeatedimer** respectfully. To set up **TimedTask.py** you will need to use the sheetfu library to access the google sheets you want to use. This library was hosen over the official google api as it gives slightly more flexibility.
 
-When **TimedTask.py** finds that the dimensions of the google sheet have changed (meaning that data was added) it runs **spreadsheet.py**. One limitation is that you cannot check for an update to the google sheet quicker than **speadsheet.py** takes to run as this will cause errors and crashes. 
+When **TimedTask.py** finds that the dimensions of the google sheet have changed (meaning that data was added) it runs **spreadsheet.py**. One limitation is that you cannot check for an update to the google sheet quicker than **speadsheet.py** takes to run as this will cause errors and crashes.
 
-**Spreadsheet.py** is the script that actually analyses the data. When called, it takes the most recent X lies of data added at the botom of the google sheet. It is therefore important that you agree ahead of time with the person handling the data transfer from the crutch to the sheet how big your batch sizes will be as you will want to change the range of rows looked at based off of that number. You also need to agree how the batch is formatted. Currently, each batch is preceded with a "New upload" row, a row dedicated to the date and timeand a row indicating the start of the sample. These must all be taken into account so that the script knows where to look to find the actual data. 
+**Spreadsheet.py** is the script that actually analyses the data. When called, it takes the most recent X lies of data added at the botom of the google sheet. It is therefore important that you agree ahead of time with the person handling the data transfer from the crutch to the sheet how big your batch sizes will be as you will want to change the range of rows looked at based off of that number. You also need to agree how the batch is formatted. Currently, each batch is preceded with a "New upload" row, a row dedicated to the date and timeand a row indicating the start of the sample. These must all be taken into account so that the script knows where to look to find the actual data.
 
 The only other thing that needs to be changed in the **spreadsheet.py** script the the value you decide to assign for the weight threshold. This is imporant as it is used to determine what consitutes a step using the crutch which impacts many of the end values computed. Similarly to the **TimedTask.py** you will use the sheetfu library to connect to both the google sheet containing the raw data but also the google sheet which you will be sending the data to. More information can be found on how to do this here: https://github.com/socialpoint-labs/sheetfu/blob/master/documentation/usage.rst
 
@@ -67,8 +67,9 @@ To get the on-crutch system running, download, compile and load the code onto yo
 # Exercise Monitoring and Feedback System
 
 ## System Diagram
+<img src="https://github.com/rch16/SmartCrutch/blob/master/ExerciseTracker/Figures/exercise_tracker_complete.png" width="400">
 
-<img src="https://github.com/rch16/SmartCrutch/blob/master/ExerciseTracker/Figures/flow-chart.png" width="400">
+<img src="https://github.com/rch16/SmartCrutch/blob/master/ExerciseTracker/Figures/Exercise_Tracker_Flowchart.png" width="400">
 
 ## Hardware
 
@@ -86,12 +87,12 @@ To be able to interact with the mobile application the API and the ROS nodes nee
 
 To build the mobiles app requires the latest version of Android Studio. When importing the project use the gradle build in SmartCrutch/App/HCR_App/ directory.
 
-This application requires, Android SDK Platform 28 and at least Android 9 to run on the target device. 
+This application requires, Android SDK Platform 28 and at least Android 9 to run on the target device.
 The install the app on a mobile devices run the command.
 
     gradlew assembleDebug
 
-This will build an APK in build/outputs/apk. This apk file then can be transferred to the mobile device and installed. 
+This will build an APK in build/outputs/apk. This apk file then can be transferred to the mobile device and installed.
 
 
 ## API
