@@ -74,6 +74,18 @@ visual_plot.py can be used to plot the skeletal profiles from the coordinates of
 
 To be able to interact with the mobile application the API and the ROS nodes need to be running. This is because the mobile application will need to redirect itself to the internet address of the API server.
 
+### Building the Mobile App
+
+To build the mobiles app requires the latest version of Android Studio. When importing the project use the gradle build in SmartCrutch/App/HCR_App/ directory.
+
+This application requires, Android SDK Platform 28 and at least Android 9 to run on the target device. 
+The install the app on a mobile devices run the command.
+
+    gradlew assembleDebug
+
+This will build an APK in build/outputs/apk. This apk file then can be transferred to the mobile device and installed. 
+
+
 ## API
 
 ### Installation of dependencies
