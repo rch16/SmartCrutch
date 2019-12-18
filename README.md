@@ -44,7 +44,7 @@ Located within the SmartCrutches Folder:
 
 
 ## Data Analysis
-
+Explain how this works, what the scripts do, how to get it up and running (any dependencies and libraries etc)
 The following two scripts perform the data analysis
 * **TimedTask.py**:
 * **spreadsheet.py**:
