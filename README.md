@@ -49,10 +49,12 @@ The following two scripts perform the data analysis
 * **TimedTask.py**:
 * **spreadsheet.py**:
 
-## Mobile App
-
 ## System Setup
 The code is written for use on an Adafruit Feather HUZZAH. This can be interfaced with using the Arduino IDE, found [here](https://www.arduino.cc/en/main/software). To set this IDE up for use with the Huzzah board, [these instructions](https://learn.adafruit.com/adafruit-feather-huzzah-esp8266/using-arduino-ide) should be followed. Additionally, a library must be installed and added to the Libary manager of the IDE to allow for interfacing with the HX711 (A load cell amplifier) - to reduce the risk of compatability errors experienced during implementation of the project, this can be found in this repo [here](www.github.com/rch16/SmartCrutch/SmartCrutches/LoadCell/HX711).
+
+To get the on-crutch system running, download, compile and load the code onto your board. Open the Serial Monitor at the Baud rate specified in the code for debugging.
+
+# Mobile App
 
 # Exercise Monitoring and Feedback System
 
