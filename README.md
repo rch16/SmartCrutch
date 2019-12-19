@@ -57,7 +57,7 @@ The only other thing that needs to be changed in the **spreadsheet.py** script t
 ## System Setup
 The system can be assembled by following this wiring diagram: 
 
-<img src="https://github.com/rch16/SmartCrutch/blob/master/SmartCrutches/FullSystem/diagram.pdf">
+<img src="https://github.com/rch16/SmartCrutch/blob/master/SmartCrutches/FullSystem/Wiring_Diagram.png">
 
 
 The code is written for use on an Adafruit Feather HUZZAH. This can be interfaced with using the Arduino IDE, found [here](https://www.arduino.cc/en/main/software). To set this IDE up for use with the Huzzah board, [these instructions](https://learn.adafruit.com/adafruit-feather-huzzah-esp8266/using-arduino-ide) should be followed. Additionally, a library must be installed and added to the Libary manager of the IDE to allow for interfacing with the HX711 (A load cell amplifier) - to reduce the risk of compatability errors experienced during implementation of the project, this can be found in this repo [here](www.github.com/rch16/SmartCrutch/SmartCrutches/LoadCell/HX711).
@@ -66,26 +66,9 @@ To get the on-crutch system running, download, compile and load the code onto yo
 
 # Mobile App
 
-# Exercise Monitoring and Feedback System
-
-## System Diagram
-<img src="https://github.com/rch16/SmartCrutch/blob/master/ExerciseTracker/Figures/exercise_tracker_complete.png" width="400">
-
-<img src="https://github.com/rch16/SmartCrutch/blob/master/ExerciseTracker/Figures/Exercise_Tracker_Flowchart.png" width="400">
-
-## Hardware
-
-The only hardware requirement to use the Exercise Tracker is to have a Kinect camera, connected to a computer. This computer must be able to run all the scripts listed in the ExerciseTracker folder.
-
-## Data Analysis
-
-visual_plot.py can be used to plot the skeletal profiles from the coordinates of all elements of the human body of the user.
-
-## Mobile App
-
 To be able to interact with the mobile application the API and the ROS nodes need to be running. This is because the mobile application will need to redirect itself to the internet address of the API server.
 
-### Building the Mobile App
+## Building the Mobile App
 
 To build the mobiles app requires the latest version of Android Studio. When importing the project use the gradle build in SmartCrutch/App/HCR_App/ directory.
 
@@ -95,6 +78,19 @@ The install the app on a mobile devices run the command.
     gradlew assembleDebug
 
 This will build an APK in build/outputs/apk. This apk file then can be transferred to the mobile device and installed.
+
+# Exercise Monitoring and Feedback System
+
+## System Diagram
+<img src="https://github.com/rch16/SmartCrutch/blob/master/ExerciseTracker/Figures/Complete_Exercise_Tracker_System.png" width="400">
+
+## Hardware
+
+The only hardware requirement to use the Exercise Tracker is to have a Kinect camera, connected to a computer. This computer must be able to run all the scripts listed in the ExerciseTracker folder.
+
+## Data Analysis
+
+visual_plot.py can be used to plot the skeletal profiles from the coordinates of all elements of the human body of the user.
 
 
 ## API
