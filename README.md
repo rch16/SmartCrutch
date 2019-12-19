@@ -6,7 +6,7 @@ The purpose of this project was to investigate how a sensor-enabled crutch could
 - Regular feedback for the patient and physicians on use and gate with the crutches
 - A 3D video tracking system to provide the patient with feedback on their exercise technique
 
-The full research paper containing the group's findings can be found here.
+The full research paper containing the group's findings and further information about the system implementation can be found [here](https://github.com/rch16/SmartCrutch/blob/master/Research%20Paper.pdf).
 
 This repository contains all the schematics, code and instructions required to reconstruct the system, and continue the research.
 
