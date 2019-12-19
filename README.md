@@ -136,9 +136,9 @@ To install all packages from this repository as Debian packages, use:
 
 ##### Dependencies
 
-- [Robot Operating System (ROS)](http://wiki.ros.org) (middleware for robotics),
-- [OpenNi launcher](http://wiki.ros.org/openni_launch) (Driver for Kinect) ,
-- [OpenNi tracker](http://wiki.ros.org/openni_tracker) (Skeletal tracking) ,
+- [Robot Operating System (ROS)](http://wiki.ros.org) (middleware for robotics)
+- [OpenNi launcher](http://wiki.ros.org/openni_launch) (Driver for Kinect)
+- [OpenNi tracker](http://wiki.ros.org/openni_tracker) (Skeletal tracking)
 - [rosbridge-server](http://wiki.ros.org/rosbridge_suite) (Communication between listener and api.py)
 
 
