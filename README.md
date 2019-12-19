@@ -35,16 +35,15 @@ LED/Motor board:
 
 ## Crutch Software
 
-Located within the SmartCrutches Folder:
-
 **Testing**:
-To test the various components within the system
+To test the various components within the system, found [here](https://github.com/rch16/SmartCrutch/tree/master/SmartCrutches/Testing)
 * **imu_demo/imu_demo.ino**: Code for testing and demonstration of operation of IMU
 * **force_demo/force_demo.ino**: Code for testing and demonstration of operation of Weight Sensor, LED and Motors in feedback system. Allows for calibration of weight sensor, Prints readings to the Serial Monitor and activiates Motor and LED above a threshold defined in the code.
 * **LED/led_test/led_test.ino**: Code for testing operation of LEDs in feedback system. Cycles through RGB colours, changing colour once a second.
 * **Motor/motor_test/motor_test.ino**: Code for testing operation of Motors in feedback system. Pulses motor on/off every 5s.
 
-**FullSystem/CrutchSystem**:
+**Full System**:
+All required code and information for running and operating the system found [here](https://github.com/rch16/SmartCrutch/tree/master/SmartCrutches/FullSystem)
 * **full_system/full_system.ino**: Code for full operation of on-crutch system, including transfer to the Google Sheet for treatment by the Data Analysis section. Editing the links found in this code will change the end location of the data transfer.
 * **HX711**: Library for the HX711
 
