@@ -38,10 +38,7 @@ Located within the SmartCrutches Folder:
 * **Motor/motor_test/motor_test.ino**: Code for testing operation of Motors in feedback system. Pulses motor on/off every 5s.
 
 **FullSystem**:
-* **full_system/full_system.ino**: Code for full operation of on-crutch system.
-
-## Data Transfer
-
+* **full_system/full_system.ino**: Code for full operation of on-crutch system, including transfer to the Google Sheet for treatment by the Data Analysis section. Editing the links found in this code will change the end location of the data transfer.
 
 ## Data Analysis
 The data analysis is done using two scripts:
@@ -58,6 +55,11 @@ The only other thing that needs to be changed in the **spreadsheet.py** script t
 
 
 ## System Setup
+The system can be assembled by following this wiring diagram: 
+
+<img src="https://github.com/rch16/SmartCrutch/blob/master/SmartCrutches/FullSystem/diagram.pdf">
+
+
 The code is written for use on an Adafruit Feather HUZZAH. This can be interfaced with using the Arduino IDE, found [here](https://www.arduino.cc/en/main/software). To set this IDE up for use with the Huzzah board, [these instructions](https://learn.adafruit.com/adafruit-feather-huzzah-esp8266/using-arduino-ide) should be followed. Additionally, a library must be installed and added to the Libary manager of the IDE to allow for interfacing with the HX711 (A load cell amplifier) - to reduce the risk of compatability errors experienced during implementation of the project, this can be found in this repo [here](www.github.com/rch16/SmartCrutch/SmartCrutches/LoadCell/HX711).
 
 To get the on-crutch system running, download, compile and load the code onto your board. Open the Serial Monitor at the Baud rate specified in the code for debugging.
