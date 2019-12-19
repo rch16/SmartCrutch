@@ -13,7 +13,14 @@ This repository contains all the schematics, code and instructions required to r
 # Crutch Monitoring and Feedback System
 ## System Diagram
 
-<img src="https://github.com/rch16/SmartCrutch/blob/master/SmartCrutches/FullSystem/Hardware_System_Diagram.png">
+Full system:
+
+
+<img src="https://github.com/rch16/SmartCrutch/blob/master/SmartCrutches/FullSystem/Hardware_System_Diagram.png" width="600">
+
+LED/Motor board:
+
+<img src="https://github.com/rch16/SmartCrutch/blob/master/SmartCrutches/FullSystem/NPN_Driver_Board.png" width="400">
 
 ## Component Diagram
 
