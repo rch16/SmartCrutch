@@ -60,7 +60,7 @@ The data analysis is completed using two scripts, found [here](https://github.co
 
 The only other thing that needs to be changed in the spreadsheet.py script is the value you decide to assign for the weight threshold. This is imporant, as it is used to determine what consitutes a step using the crutch which impacts many of the end values computed. Similarly to the TimedTask.py you will use the sheetfu library to connect to both the google sheet containing the raw data but also the google sheet which you will be sending the data to. 
 
-More information can be found on how to do this [here]()https://github.com/socialpoint-labs/sheetfu/blob/master/documentation/usage.rst. 
+More information can be found on how to do this [here](https://github.com/socialpoint-labs/sheetfu/blob/master/documentation/usage.rst). 
 
 
 ## System Setup
