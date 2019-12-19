@@ -70,10 +70,10 @@ To be able to interact with the mobile application the API and the ROS nodes nee
 
 ## Building the Mobile App
 
-To build the mobiles app requires the latest version of Android Studio. When importing the project use the gradle build in SmartCrutch/App/HCR_App/ directory.
+To build the mobiles app requires the latest version of Android Studio. When importing the project, use the gradle build in SmartCrutch/App/HCR_App/ directory.
 
 This application requires, Android SDK Platform 28 and at least Android 9 to run on the target device.
-The install the app on a mobile devices run the command.
+To install the app on a mobile devices, run the command.
 
     gradlew assembleDebug
 
