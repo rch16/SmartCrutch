@@ -45,7 +45,9 @@ To test the various components within the system, found [here](https://github.co
 **Full System**:
 All required code and information for running and operating the system, found [here](https://github.com/rch16/SmartCrutch/tree/master/SmartCrutches/FullSystem).
 * **full_system/full_system.ino**: Code for full operation of on-crutch system, including transfer to the Google Sheet for treatment by the Data Analysis section. Editing the links found in this code will change the end location of the data transfer.
-* **HX711**: Library for the HX711
+* **HX711**: Library for the HX711.
+* **Datasheets**: Datasheets for components.
+* **Diagrams**: All technical diagrams required for system assembly.
 
 ## Data Analysis
 The data analysis is completed using two scripts, found [here](https://github.com/rch16/SmartCrutch/tree/master/SmartCrutches/FullSystem/DataAnalysis):
