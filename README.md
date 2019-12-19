@@ -13,6 +13,10 @@ This repository contains all the schematics, code and instructions required to r
 # Crutch Monitoring and Feedback System
 ## System Diagram
 
+<img src="https://github.com/rch16/SmartCrutch/blob/master/SmartCrutches/FullSystem/Hardware_System_Diagram.png">
+
+## Component Diagram
+
 <img src="https://github.com/rch16/SmartCrutch/blob/master/SmartCrutches/FullSystem/Crutch_System_Diagram.png" width="400">
 
 ## Hardware
@@ -62,7 +66,7 @@ The system can be assembled by following this wiring diagram:
 
 The code is written for use on an Adafruit Feather HUZZAH. This can be interfaced with using the Arduino IDE, found [here](https://www.arduino.cc/en/main/software). To set this IDE up for use with the Huzzah board, [these instructions](https://learn.adafruit.com/adafruit-feather-huzzah-esp8266/using-arduino-ide) should be followed. Additionally, a library must be installed and added to the Libary manager of the IDE to allow for interfacing with the HX711 (A load cell amplifier) - to reduce the risk of compatability errors experienced during implementation of the project, this can be found in this repo [here](www.github.com/rch16/SmartCrutch/SmartCrutches/LoadCell/HX711).
 
-To get the on-crutch system running, download, compile and load the code onto your board. Open the Serial Monitor at the Baud rate specified in the code for debugging.
+To get the on-crutch system running, download, compile and load the code found [here](https://github.com/rch16/SmartCrutch/tree/master/SmartCrutches/FullSystem/full_system) onto your board. Open the Serial Monitor at the Baud rate specified in the code for debugging.
 
 # Mobile App
 
