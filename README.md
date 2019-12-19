@@ -15,16 +15,15 @@ This repository contains all the schematics, code and instructions required to r
 
 Full system:
 
-
-<img src="https://github.com/rch16/SmartCrutch/blob/master/SmartCrutches/FullSystem/Hardware_System_Diagram.png" width="600">
+<img src="https://github.com/rch16/SmartCrutch/blob/master/SmartCrutches/FullSystem/Diagrams/Hardware_System_Diagram.png" width="600">
 
 LED/Motor board:
 
-<img src="https://github.com/rch16/SmartCrutch/blob/master/SmartCrutches/FullSystem/NPN_Driver_Board.png" width="400">
+<img src="https://github.com/rch16/SmartCrutch/blob/master/SmartCrutches/FullSystem/Diagrams/NPN_Driver_Board.png" width="400">
 
 ## Component Diagram
 
-<img src="https://github.com/rch16/SmartCrutch/blob/master/SmartCrutches/FullSystem/Crutch_System_Diagram.png" width="400">
+<img src="https://github.com/rch16/SmartCrutch/blob/master/SmartCrutches/FullSystem/Diagrams/Crutch_System_Diagram.png" width="400">
 
 ## Hardware
 
@@ -38,21 +37,19 @@ LED/Motor board:
 
 Located within the SmartCrutches Folder:
 
-**IMU**:
+**Testing**:
+To test the various components within the system
 * **imu_demo/imu_demo.ino**: Code for testing and demonstration of operation of IMU
-
-**LoadCell**:
 * **force_demo/force_demo.ino**: Code for testing and demonstration of operation of Weight Sensor, LED and Motors in feedback system. Allows for calibration of weight sensor, Prints readings to the Serial Monitor and activiates Motor and LED above a threshold defined in the code.
-
-**BioFeedback**:
 * **LED/led_test/led_test.ino**: Code for testing operation of LEDs in feedback system. Cycles through RGB colours, changing colour once a second.
 * **Motor/motor_test/motor_test.ino**: Code for testing operation of Motors in feedback system. Pulses motor on/off every 5s.
 
-**FullSystem**:
+**FullSystem/CrutchSystem**:
 * **full_system/full_system.ino**: Code for full operation of on-crutch system, including transfer to the Google Sheet for treatment by the Data Analysis section. Editing the links found in this code will change the end location of the data transfer.
+* **HX711**: Library for the HX711
 
 ## Data Analysis
-The data analysis is completed using two scripts, found [here](https://github.com/rch16/SmartCrutch/tree/master/SmartCrutches/DataAnalysis):
+The data analysis is completed using two scripts, found [here](https://github.com/rch16/SmartCrutch/tree/master/SmartCrutches/FullSystem/DataAnalysis):
 
 **TimedTask.py** This script whether or not the new data has been added to the sheet. You can control how long it performs this check for and how often it checks by changing the parameters in *sleep* and *Repeatedimer* respectfully. To set up this script, you will need to use the sheetfu library, in order to access the google sheets you want to use. This library was hosen over the official google api as it gives slightly more flexibility. When TimedTask.py finds that the dimensions of the google sheet have changed (meaning that data was added), it runs spreadsheet.py. One limitation is that you cannot check for an update to the google sheet quicker than speadsheet.py takes to run or you will cause errors and crashes.
 
@@ -66,12 +63,12 @@ More information can be found on how to do this [here](https://github.com/social
 ## System Setup
 The system can be assembled by following this wiring diagram: 
 
-<img src="https://github.com/rch16/SmartCrutch/blob/master/SmartCrutches/FullSystem/Wiring_Diagram.png">
+<img src="https://github.com/rch16/SmartCrutch/blob/master/SmartCrutches/FullSystem/Diagrams/Wiring_Diagram.pngg">
 
 
-The code is written for use on an Adafruit Feather HUZZAH. This can be interfaced with using the Arduino IDE, found [here](https://www.arduino.cc/en/main/software). To set this IDE up for use with the Huzzah board, [these instructions](https://learn.adafruit.com/adafruit-feather-huzzah-esp8266/using-arduino-ide) should be followed. Additionally, a library must be installed and added to the Libary manager of the IDE to allow for interfacing with the HX711 (A load cell amplifier) - to reduce the risk of compatability errors experienced during implementation of the project, this can be found in this repo [here](www.github.com/rch16/SmartCrutch/SmartCrutches/LoadCell/HX711).
+The code is written for use on an Adafruit Feather HUZZAH. This can be interfaced with using the Arduino IDE, found [here](https://www.arduino.cc/en/main/software). To set this IDE up for use with the Huzzah board, [these instructions](https://learn.adafruit.com/adafruit-feather-huzzah-esp8266/using-arduino-ide) should be followed. Additionally, a library must be installed and added to the Libary manager of the IDE to allow for interfacing with the HX711 (A load cell amplifier) - to reduce the risk of compatability errors experienced during implementation of the project, this can be found in this repo [here](https://github.com/rch16/SmartCrutch/tree/master/SmartCrutches/FullSystem/CrutchSystem/HX711).
 
-To get the on-crutch system running, download, compile and load the code found [here](https://github.com/rch16/SmartCrutch/tree/master/SmartCrutches/FullSystem/full_system) onto your board. Open the Serial Monitor at the Baud rate specified in the code for debugging.
+To get the on-crutch system running, download, compile and load the code found [here](https://github.com/rch16/SmartCrutch/tree/master/SmartCrutches/FullSystem/CrutchSystem/full_system) onto your board. Open the Serial Monitor at the Baud rate specified in the code for debugging.
 
 # Mobile App
 
